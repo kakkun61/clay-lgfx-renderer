@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+# Doxygen input filter for the Markdown files (see FILTER_PATTERNS in
+# Doxyfile). Doxygen runs it on each file and reads the result from standard
+# output; the files themselves stay plain GitHub flavoured Markdown.
+#
+# It works around two Doxygen quirks:
+#
+# 1. In-page links such as [Usage](#usage) are turned into section references
+#    that repeat the heading text after the link and, in lists, cut the item
+#    short. They are rewritten as HTML links, which Doxygen leaves alone.
+#
+# 2. A code span right after a non-ASCII character, such as 、`.ino`, loses its
+#    opening tag when the span starts with a symbol. A zero width non-joiner
+#    (&zwnj;), which shows nothing, is put between the two.
+#
+# Fenced code blocks and the contents of code spans are left untouched.
+
+use strict;
+use warnings;
+use utf8;
+use open qw(:std :encoding(UTF-8));
+
+my $in_fence = 0;
+while (my $line = <>) {
+    if ($line =~ /^\s*```/) {
+        $in_fence = !$in_fence;
+        print $line;
+        next;
+    }
+    if ($in_fence) {
+        print $line;
+        next;
+    }
+    # Split the line into code spans and the text between them, so that only
+    # the text is rewritten.
+    my @parts = split /(`[^`]*`)/, $line;
+    for my $i (0 .. $#parts) {
+        if ($parts[$i] =~ /^`/) {
+            $parts[$i] = '&zwnj;' . $parts[$i] if $i > 0 && $parts[$i - 1] =~ /[^\x00-\x7F]\z/;
+        } else {
+            $parts[$i] =~ s/\[([^\]]+)\]\(#([^)\s]+)\)/<a href="#$2">$1<\/a>/g;
+        }
+    }
+    print @parts;
+}

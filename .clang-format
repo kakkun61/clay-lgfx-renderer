@@ -1,0 +1,12 @@
+Language: Cpp
+BasedOnStyle: Google
+AllowAllArgumentsOnNextLine: false
+AllowShortIfStatementsOnASingleLine : AllIfsAndElse
+BinPackArguments: false
+ColumnLimit: 120
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: false
+PointerAlignment: Right
+ReflowComments: Never
+SpaceAfterCStyleCast: true

@@ -1,0 +1,20 @@
+# Generates the API reference from the comments in the public headers.
+PROJECT_NAME           = "Clay LovyanGFX Renderer"
+PROJECT_BRIEF          = "Draws Clay layouts with LovyanGFX"
+OUTPUT_DIRECTORY       = build/doc
+INPUT                  = src README.md README.ja.md
+FILE_PATTERNS          = *.h *.hpp
+RECURSIVE              = YES
+USE_MDFILE_AS_MAINPAGE = README.md
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+QUIET                  = YES
+MARKDOWN_SUPPORT       = YES
+MARKDOWN_ID_STYLE      = GITHUB
+FILTER_PATTERNS        = *.md=dev/doxygen-markdown-filter
+IMAGE_PATH             = doc/image

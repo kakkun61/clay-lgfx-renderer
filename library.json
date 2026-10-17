@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "ClayLGFX",
+  "version": "0.1.0",
+  "description": "Clay UI layout renderer backed by LovyanGFX, with LovyanGFX fonts and touch or button input.",
+  "keywords": ["clay", "ui", "layout", "gui", "lovyangfx", "display", "touch", "m5stack"],
+  "authors": [
+    {
+      "name": "Kazuki Okamoto",
+      "maintainer": true
+    }
+  ],
+  "license": "Apache-2.0",
+  "frameworks": "*",
+  "platforms": "*",
+  "headers": "ClayLGFX.hpp",
+  "dependencies": [
+    {
+      "owner": "lovyan03",
+      "name": "LovyanGFX",
+      "version": "^1.2.0"
+    }
+  ],
+  "export": {
+    "include": ["src", "example", "library.json", "library.properties", "README.md", "README.ja.md"]
+  },
+  "examples": [
+    {
+      "name": "demo",
+      "base": "example/demo",
+      "files": ["demo.ino", "demo_app.hpp", "demo_app.cpp", "clay_impl.c"]
+    }
+  ]
+}

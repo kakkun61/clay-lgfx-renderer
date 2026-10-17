@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Tests, formatting and spelling
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      # Unit tests, treefmt and cspell.
+      - run: nix flake check -L
+      # The SDL simulator of the demo.
+      - run: nix build -L
+
+  esp32:
+    name: ESP32 build (${{ matrix.sketch }}, ${{ matrix.board }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        sketch: [example/demo, example/minimal]
+        board: [m5stack_core, m5stack_core2, m5stack_cores3]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      # The arduino-cli of the development shell runs in an FHS sandbox made
+      # with bubblewrap, which needs unprivileged user namespaces. Ubuntu
+      # 24.04 restricts them through AppArmor.
+      - run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      # arduino-cli downloads the ESP32 core and its toolchains into
+      # ~/.arduino15. They are large, so keep them between runs. The core
+      # version is pinned in the Makefile; keying the cache on it means a
+      # version bump starts a fresh cache instead of reusing the old core.
+      - id: core
+        run: echo "version=$(make -s esp32-core-version)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
+        with:
+          path: ~/.arduino15
+          key: arduino15-esp32-${{ steps.core.outputs.version }}
+      - run: nix develop -c make esp32-setup
+      - run: nix develop -c make esp32 SKETCH=${{ matrix.sketch }} FQBN=esp32:esp32:${{ matrix.board }}
