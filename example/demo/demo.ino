@@ -59,6 +59,12 @@ void setup() {
   if (!app.begin(inputConfigFor(display.getBoard()))) {
     display.fillScreen(TFT_RED);
     display.drawString("Out of memory", 4, 4);
+    display.setCursor(4, 24);
+    display.printf("Clay needs %u bytes\n", static_cast<unsigned>(Clay_MinMemorySize()));
+    display.setCursor(4, display.getCursorY());
+    display.printf("free %u, largest block %u\n",
+                   static_cast<unsigned>(heap_caps_get_free_size(MALLOC_CAP_8BIT)),
+                   static_cast<unsigned>(heap_caps_get_largest_free_block(MALLOC_CAP_8BIT)));
     for (;;) delay(1000);
   }
 }

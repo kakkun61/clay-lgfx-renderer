@@ -87,8 +87,8 @@ DemoApp::~DemoApp() { free(clayMemory); }
 bool DemoApp::begin(const InputConfig &config) {
   // Clay's defaults are sized for desktop applications and would need
   // megabytes. A screen of a few hundred pixels needs far fewer elements.
-  Clay_SetMaxElementCount(128);
-  Clay_SetMaxMeasureTextCacheWordCount(256);
+  Clay_SetMaxElementCount(80);
+  Clay_SetMaxMeasureTextCacheWordCount(128);
   const uint32_t size = Clay_MinMemorySize();
   clayMemory = malloc(size);
   if (!clayMemory) {

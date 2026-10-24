@@ -273,6 +273,7 @@ bool BandedPresenter::present(const Clay_RenderCommandArray &commands) {
     renderer.render(band, commands, 0, y);
     // The last band may stick out below the display; LovyanGFX clips it.
     band.pushSprite(&display, 0, y);
+    display.waitDMA();
   }
   display.endWrite();
 

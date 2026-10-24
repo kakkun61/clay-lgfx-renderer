@@ -138,6 +138,7 @@ esp32-all: | check-dep
 	$(foreach s,$(ESP32_SKETCHES),$(foreach b,$(ESP32_BOARDS),$(MAKE) esp32 SKETCH=$(s) FQBN=esp32:esp32:$(b) &&)) true
 
 upload: esp32
+	$(info run `make esp32` to compile the sketch before uploading it first)
 	$(ARDUINO_CLI) upload --fqbn $(FQBN) --port $(PORT) --input-dir $(CURDIR)/$(ESP32_DIR) $(SKETCH)
 
 monitor:
